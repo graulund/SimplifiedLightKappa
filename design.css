@@ -5,7 +5,7 @@
 	padding: 0;
 	font-size: 100%;
   	word-wrap: break-word;
-}	
+}
 
 body {
 	color: #000;
@@ -36,6 +36,7 @@ body[viewtype=channel] div#body_home {
 
 body .line {
  	margin-top: -1px;
+	clear: both;
 }
 
 body[dir=rtl] .sender {
@@ -45,7 +46,7 @@ body[dir=rtl] .sender {
 /* Loading Screen */
 
 body div#loading_screen {
-	position:absolute; 
+	position: absolute;
 	top: 50%;
 	left: 50%;
 	margin-top: -11px;
@@ -66,12 +67,12 @@ body div#loading_screen {
 
 body[dir=ltr] .time {
 	color: #aaa;
-	white-space: nowrap; 
+	white-space: nowrap;
 }
 
 body[dir=rtl] .time {
 	color: #aaa;
-	white-space: nowrap; 
+	white-space: nowrap;
 	padding-left: 0.4em;
 	display: inline-block;
 }
@@ -117,6 +118,7 @@ a:hover {
 	text-shadow: 1px 1px rgba(83, 86, 94, 0.7);
 	background: -webkit-linear-gradient(top, #A2B0D0 0%, #7385AD 100%);
 	-webkit-transition: opacity 0.8s linear;
+	-webkit-font-smoothing: subpixel-antialiased;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -130,7 +132,7 @@ a:hover {
 	white-space: normal;
 }
 
-#topic_bar a, 
+#topic_bar a,
 #topic_bar span.channel {
 	color: #FFFFFF;
 	border-color: #FFFFFF;
@@ -139,19 +141,48 @@ a:hover {
 
 /* Images */
 
-body a img {
-	border: 0;
+.inlineImageCell {
+	overflow: auto;
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 12px;
 }
 
-body img {
-	display: block;
-	max-width: 95%;
-	margin: 15px 15px 12px 15px;
+.inlineImageCell .image {
+	display: inline-block;
+	float: left;
+	margin-right: 12px;
+	margin-left: 10px;
+	min-width: 40px;
+	max-width: 90%;
+}
+
+.inlineImageCell .closeButton {
+	cursor: pointer;
+	border-radius: 5px;
+	border: 2px solid #a1a1a1;
+	color: #a1a1a1;
+	display: inline-block;
+	line-height: 14px;
+	font-size: 15px;
+	font-family: "Helvetica Neue" !important;
+	text-indent: 7px;
+	width: 16px;
+	height: 16px;
+	float: left;
+	padding-right: 7px;
+	padding-left: 0px;
+}
+
+html[systemversion^="10.9"] .inlineImageCell .closeButton,
+html[systemversion^="10.8"] .inlineImageCell .closeButton {
+	line-height: 13px;
 }
 
 /* Remember Line */
 
 div[id=mark] {
+	clear: both;
 	position: relative;
 	z-index: 295;
 	margin-top: -1px;
@@ -162,8 +193,7 @@ div[id=mark] {
 
 /* Historic Line */
 
-.historic 
-{
+.historic {
 	opacity: 0.6;
 }
 
@@ -186,7 +216,7 @@ body div[ltype*=notice] .sender {
 	font-weight: 700;
 }
 
-/* SELECTED USER MESSAGES */
+/* Selected User Messages */
 
 .sender {
 	cursor: pointer;
@@ -311,7 +341,7 @@ body div.line[ltype*=dccfiletransfer] {
 
 /* Message of the Day (MOTD) */
 /* 720, 721, 722 are used by ShadowIRCd for Oper MOTD. */
-/* 372, 375, 376 are normal MOTD shared by several IRCds. */ 
+/* 372, 375, 376 are normal MOTD shared by several IRCds. */
 
 body div.line[command="372"],
 body div.line[command="721"] {
@@ -336,7 +366,7 @@ body div.line[command="722"] { /* End. */
 
 body div.line[command="372"] .message,
 body div.line[command="375"] .message,
-body div.line[command="376"] .message 
+body div.line[command="376"] .message
 body div.line[command="720"] .message,
 body div.line[command="721"] .message,
 body div.line[command="722"] .message {
@@ -404,161 +434,161 @@ body .inline_nickname {
 	font-weight: 700;
 }
 
-body div[ltype*=privmsg] .sender[mtype*=myself] { 
-	color: #ea0d68; 
+body div[ltype*=privmsg] .sender[mtype*=myself] {
+	color: #ea0d68;
 }
 
-body .sender[mtype*=normal][colornumber='0'], 
+body .sender[mtype*=normal][colornumber='0'],
 body .inline_nickname[colornumber='0'] {
-	color: #0080ff; 
+	color: #0080ff;
 }
 
-body .sender[mtype*=normal][colornumber='1'], 
+body .sender[mtype*=normal][colornumber='1'],
 body .inline_nickname[colornumber='1'] {
-	color: #059005; 
+	color: #059005;
 }
 
-body .sender[mtype*=normal][colornumber='2'], 
+body .sender[mtype*=normal][colornumber='2'],
 body .inline_nickname[colornumber='2'] {
-	color: #a80054; 
+	color: #a80054;
 }
 
-body .sender[mtype*=normal][colornumber='3'], 
+body .sender[mtype*=normal][colornumber='3'],
 body .inline_nickname[colornumber='3'] {
-	color: #9b0db1; 
+	color: #9b0db1;
 }
 
-body .sender[mtype*=normal][colornumber='4'], 
+body .sender[mtype*=normal][colornumber='4'],
 body .inline_nickname[colornumber='4'] {
-	color: #108860; 
+	color: #108860;
 }
 
-body .sender[mtype*=normal][colornumber='5'], 
+body .sender[mtype*=normal][colornumber='5'],
 body .inline_nickname[colornumber='5'] {
-	color: #7F4FFF; 
+	color: #7F4FFF;
 }
 
-body .sender[mtype*=normal][colornumber='6'], 
+body .sender[mtype*=normal][colornumber='6'],
 body .inline_nickname[colornumber='6'] {
-	color: #58701a; 
+	color: #58701a;
 }
 
-body .sender[mtype*=normal][colornumber='7'], 
+body .sender[mtype*=normal][colornumber='7'],
 body .inline_nickname[colornumber='7'] {
-	color: #620a8e; 
+	color: #620a8e;
 }
 
-body .sender[mtype*=normal][colornumber='8'], 
+body .sender[mtype*=normal][colornumber='8'],
 body .inline_nickname[colornumber='8'] {
-	color: #BB0008; 
+	color: #BB0008;
 }
 
-body .sender[mtype*=normal][colornumber='9'], 
+body .sender[mtype*=normal][colornumber='9'],
 body .inline_nickname[colornumber='9'] {
-	color: #44345f; 
+	color: #44345f;
 }
 
-body .sender[mtype*=normal][colornumber='10'], 
+body .sender[mtype*=normal][colornumber='10'],
 body .inline_nickname[colornumber='10'] {
-	color: #2f5353; 
+	color: #2f5353;
 }
 
-body .sender[mtype*=normal][colornumber='11'], 
+body .sender[mtype*=normal][colornumber='11'],
 body .inline_nickname[colornumber='11'] {
-	color: #904000; 
+	color: #904000;
 }
 
-body .sender[mtype*=normal][colornumber='12'], 
+body .sender[mtype*=normal][colornumber='12'],
 body .inline_nickname[colornumber='12'] {
-	color: #808000; 
+	color: #808000;
 }
 
-body .sender[mtype*=normal][colornumber='13'], 
+body .sender[mtype*=normal][colornumber='13'],
 body .inline_nickname[colornumber='13'] {
-	color: #57797e; 
+	color: #57797e;
 }
 
-body .sender[mtype*=normal][colornumber='14'], 
+body .sender[mtype*=normal][colornumber='14'],
 body .inline_nickname[colornumber='14'] {
-	color: #3333dd; 
+	color: #3333dd;
 }
 
-body .sender[mtype*=normal][colornumber='15'], 
+body .sender[mtype*=normal][colornumber='15'],
 body .inline_nickname[colornumber='15'] {
-	color: #5f4d22; 
+	color: #5f4d22;
 }
 
-body .sender[mtype*=normal][colornumber='16'], 
-body .inline_nickname[colornumber='16'] { 
+body .sender[mtype*=normal][colornumber='16'],
+body .inline_nickname[colornumber='16'] {
 	color: #706616;
 }
 
-body .sender[mtype*=normal][colornumber='17'], 
-body .inline_nickname[colornumber='17'] { 
+body .sender[mtype*=normal][colornumber='17'],
+body .inline_nickname[colornumber='17'] {
 	color: #46799c;
 }
 
-body .sender[mtype*=normal][colornumber='18'], 
-body .inline_nickname[colornumber='18'] { 
+body .sender[mtype*=normal][colornumber='18'],
+body .inline_nickname[colornumber='18'] {
 	color: #80372e;
 }
 
-body .sender[mtype*=normal][colornumber='19'], 
-body .inline_nickname[colornumber='19'] { 
+body .sender[mtype*=normal][colornumber='19'],
+body .inline_nickname[colornumber='19'] {
 	color: #8F478E;
 }
 
-body .sender[mtype*=normal][colornumber='20'], 
-body .inline_nickname[colornumber='20'] { 
+body .sender[mtype*=normal][colornumber='20'],
+body .inline_nickname[colornumber='20'] {
 	color: #5b9e4c;
 }
 
-body .sender[mtype*=normal][colornumber='21'], 
-body .inline_nickname[colornumber='21'] { 
+body .sender[mtype*=normal][colornumber='21'],
+body .inline_nickname[colornumber='21'] {
 	color: #13826c;
 }
 
-body .sender[mtype*=normal][colornumber='22'], 
-body .inline_nickname[colornumber='22'] { 
+body .sender[mtype*=normal][colornumber='22'],
+body .inline_nickname[colornumber='22'] {
 	color: #b13637;
 }
 
-body .sender[mtype*=normal][colornumber='23'], 
-body .inline_nickname[colornumber='23'] { 
+body .sender[mtype*=normal][colornumber='23'],
+body .inline_nickname[colornumber='23'] {
 	color: #e45d59;
 }
 
-body .sender[mtype*=normal][colornumber='24'], 
-body .inline_nickname[colornumber='24'] { 
+body .sender[mtype*=normal][colornumber='24'],
+body .inline_nickname[colornumber='24'] {
 	color: #1b51ae;
 }
 
-body .sender[mtype*=normal][colornumber='25'], 
-body .inline_nickname[colornumber='25'] { 
+body .sender[mtype*=normal][colornumber='25'],
+body .inline_nickname[colornumber='25'] {
 	color: #4855ac;
 }
 
-body .sender[mtype*=normal][colornumber='26'], 
-body .inline_nickname[colornumber='26'] { 
+body .sender[mtype*=normal][colornumber='26'],
+body .inline_nickname[colornumber='26'] {
 	color: #7f1d86;
 }
 
-body .sender[mtype*=normal][colornumber='27'], 
-body .inline_nickname[colornumber='27'] { 
+body .sender[mtype*=normal][colornumber='27'],
+body .inline_nickname[colornumber='27'] {
 	color: #73643f;
 }
 
-body .sender[mtype*=normal][colornumber='28'], 
-body .inline_nickname[colornumber='28'] { 
+body .sender[mtype*=normal][colornumber='28'],
+body .inline_nickname[colornumber='28'] {
 	color: #0b9578;
 }
 
-body .sender[mtype*=normal][colornumber='29'], 
-body .inline_nickname[colornumber='29'] { 
+body .sender[mtype*=normal][colornumber='29'],
+body .inline_nickname[colornumber='29'] {
 	color: #569c96;
 }
 
-body .sender[mtype*=normal][colornumber='30'], 
-body .inline_nickname[colornumber='30'] { 
+body .sender[mtype*=normal][colornumber='30'],
+body .inline_nickname[colornumber='30'] {
 	color: #08465f;
 }
