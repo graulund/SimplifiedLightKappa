@@ -159,7 +159,7 @@ var smilies = {
 var filteredEmotes = []
 var twitchEmotes = []
 
-var everythingLoaded = false, globalsLoaded = false, subsLoaded = false, sdesLoaded = false
+var everythingLoaded = false, globalsLoaded = false, subsLoaded = false, sdesLoaded = false, ffzsLoaded = false
 
 if(turnOnTwitchEnhancements){
 
@@ -282,7 +282,7 @@ if(turnOnTwitchEnhancements){
 		return getEmoteSet(
 			"https://graulund.github.io/secretdungeonemotes/dungeonemotes.json",
 			function(data){
-				if(typeof data === "object" && "length" in data){
+				if("length" in data){
 					for (var i = 0; i < data.length; i++) {
 						var emote = data[i], code = emote.name
 						if (filteredEmotes.indexOf(code) === -1) {
@@ -297,6 +297,87 @@ if(turnOnTwitchEnhancements){
 				sdesLoaded = true
 				getStarted()
 			}
+		)
+	}
+
+	var getFfzEmotes = function() {
+		// Expects the following JSON format in response:
+		// { room, sets: { x: { emoticons: [...] }, ... }}
+
+		var done = function(){
+			ffzsLoaded = true
+			getStarted()
+		}
+
+		// Get the channel name
+		var channelName = app.channelName()
+
+		if(typeof channelName === "string"){
+			channelName = channelName.replace(/^#/, "")
+
+			if(!channelName){
+				// Empty channel name
+				return done()
+			}
+		} else {
+			// No channel name
+			return done()
+		}
+
+		return getEmoteSet(
+			"https://api.frankerfacez.com/v1/room/" + channelName,
+			function(data){
+				if("sets" in data){
+					// Go through each set, and then each emoticon in each set
+					for(var num in data.sets){
+
+						if(!data.sets.hasOwnProperty(num)){
+							continue
+						}
+
+						var set = data.sets[num]
+
+						if("emoticons" in set && "length" in set.emoticons){
+							for(var i = 0; i < set.emoticons.length; i++){
+
+								var emote = set.emoticons[i], code = emote.name
+
+								if (filteredEmotes.indexOf(code) === -1) {
+									// Assemble srcset and get URL in a way slightly different than normal
+									var sources = [], url = ""
+
+									for(var scale in emote.urls){
+
+										if(!emote.urls.hasOwnProperty(scale)){
+											continue
+										}
+
+										var u = fixUrlScheme(emote.urls[scale])
+
+										// Default URL is the first one we see
+										if(url === ""){
+											url = u
+										}
+
+										sources.push(u + " " + scale + "x")
+									}
+									// And we have the emote!
+									twitchEmotes[code] = {
+										url: url,
+										srcset: sources.join(", "),
+										channel: channelName
+									}
+								}
+							}
+						}
+					}
+				}
+				if("room" in data){
+					// Storing the data in case it's needed
+					window.ffzRoom = data.room
+				}
+			},
+			done
 		)
 	}
 
@@ -332,6 +413,11 @@ if(turnOnTwitchEnhancements){
 	}
 
 	var emoticonSrcset = function(emote){
+
+		if("srcset" in emote){
+			return emote.srcset
+		}
+
 		var sources = [emoticonUrl(emote) + " 1x"]
 
 		if("template" in emote && "medium" in emote.template){
@@ -462,7 +548,7 @@ if(turnOnTwitchEnhancements){
 			// We already did what we need to do
 			return
 		}
-		if(globalsLoaded && subsLoaded && sdesLoaded){
+		if(globalsLoaded && subsLoaded && sdesLoaded && ffzsLoaded){
 			// Let's go!
 			everythingLoaded = true
 
@@ -490,4 +576,5 @@ if(turnOnTwitchEnhancements){
 	getGlobalEmotes()
 	getSubEmotes()
 	getSdeEmotes()
+	getFfzEmotes()
 }
