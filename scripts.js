@@ -159,7 +159,7 @@ var smilies = {
 var filteredEmotes = []
 var twitchEmotes = []
 
-var everythingLoaded = false, globalsLoaded = false, subsLoaded = false
+var everythingLoaded = false, globalsLoaded = false, subsLoaded = false, sdesLoaded = false
 
 if(turnOnTwitchEnhancements){
 
@@ -217,7 +217,7 @@ if(turnOnTwitchEnhancements){
 		// { meta : {}, template: { small, medium, large }, emotes: {...}}
 
 		return getEmoteSet(
-			"http://twitchemotes.com/api_cache/v2/global.json",
+			"https://twitchemotes.com/api_cache/v2/global.json",
 			function(data){
 				if("template" in data && "emotes" in data){
 					for (var emote in data.emotes) {
@@ -242,7 +242,7 @@ if(turnOnTwitchEnhancements){
 		// { meta : {}, template: { small, medium, large }, channels: { ...: { emotes: [...] }}}
 
 		return getEmoteSet(
-			"http://twitchemotes.com/api_cache/v2/subscriber.json",
+			"https://twitchemotes.com/api_cache/v2/subscriber.json",
 			function(data){
 				if("template" in data && "channels" in data){
 					for (var channelName in data.channels) {
@@ -275,20 +275,29 @@ if(turnOnTwitchEnhancements){
 		)
 	}
 
-	/*var regexSearch, rl = [], i
+	var getSdeEmotes = function() {
+		// Expects the following JSON format in response:
+		// [ { name: ..., url: ...}, ...]
 
-	for(i = 0; i < customEmoticons.length; i++){
-		rl.push(customEmoticons[i].name)
-	}*/
-
-
-	var getCustomEmoticon = function(name){
-		for(var i = 0; i < customEmoticons.length; i++){
-			if(customEmoticons[i].name == name){
-				return customEmoticons[i]
+		return getEmoteSet(
+			"https://graulund.github.io/secretdungeonemotes/dungeonemotes.json",
+			function(data){
+				if(typeof data === "object" && "length" in data){
+					for (var i = 0; i < data.length; i++) {
+						var emote = data[i], code = emote.name
+						if (filteredEmotes.indexOf(code) === -1) {
+							twitchEmotes[code] = {
+								url: emote.url
+							}
+						}
+					}
+				}
+			},
+			function(){
+				sdesLoaded = true
+				getStarted()
 			}
-		}
-		return null
+		)
 	}
 
 	// Add emotes to HTML
@@ -453,7 +462,7 @@ if(turnOnTwitchEnhancements){
 			// We already did what we need to do
 			return
 		}
-		if(globalsLoaded && subsLoaded){
+		if(globalsLoaded && subsLoaded && sdesLoaded){
 			// Let's go!
 			everythingLoaded = true
 
@@ -480,4 +489,5 @@ if(turnOnTwitchEnhancements){
 	// Initiate the process
 	getGlobalEmotes()
 	getSubEmotes()
+	getSdeEmotes()
 }
