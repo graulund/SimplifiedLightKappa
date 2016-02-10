@@ -159,7 +159,9 @@ var smilies = {
 var filteredEmotes = []
 var twitchEmotes = []
 
-var everythingLoaded = false, globalsLoaded = false, subsLoaded = false, sdesLoaded = false, ffzsLoaded = false
+// Status
+var everythingLoaded = false, globalsLoaded = false, subsLoaded = false,
+	sdesLoaded = false, globalFfzsLoaded = false, localFfzsLoaded = false
 
 if(turnOnTwitchEnhancements){
 
@@ -300,32 +302,16 @@ if(turnOnTwitchEnhancements){
 		)
 	}
 
-	var getFfzEmotes = function() {
+	var getFfzEmotes = function(url, channelName, callback) {
 		// Expects the following JSON format in response:
-		// { room, sets: { x: { emoticons: [...] }, ... }}
+		// { sets: { x: { emoticons: [...] }, ... }}
 
-		var done = function(){
-			ffzsLoaded = true
-			getStarted()
-		}
-
-		// Get the channel name
-		var channelName = app.channelName()
-
-		if(typeof channelName === "string"){
-			channelName = channelName.replace(/^#/, "")
-
-			if(!channelName){
-				// Empty channel name
-				return done()
-			}
-		} else {
-			// No channel name
-			return done()
+		if(!(typeof callback === "function")){
+			return
 		}
 
 		return getEmoteSet(
-			"https://api.frankerfacez.com/v1/room/" + channelName,
+			url,
 			function(data){
 				if("sets" in data){
 					// Go through each set, and then each emoticon in each set
@@ -377,6 +363,46 @@ if(turnOnTwitchEnhancements){
 					window.ffzRoom = data.room
 				}
 			},
+			callback
+		)
+	}
+
+	var getGlobalFfzEmotes = function(){
+		return getFfzEmotes(
+			"https://api.frankerfacez.com/v1/set/global",
+			"",
+			function(){
+				globalFfzsLoaded = true
+				getStarted()
+			}
+		)
+	}
+
+	var getLocalFfzEmotes = function(){
+
+		var done = function(){
+			localFfzsLoaded = true
+			getStarted()
+		}
+
+		// Get the channel name
+		var channelName = app.channelName()
+
+		if(typeof channelName === "string"){
+			channelName = channelName.replace(/^#/, "")
+
+			if(!channelName){
+				// Empty channel name
+				return done()
+			}
+		} else {
+			// No channel name
+			return done()
+		}
+
+		return getFfzEmotes(
+			"https://api.frankerfacez.com/v1/room/" + channelName,
+			channelName,
 			done
 		)
 	}
@@ -548,10 +574,11 @@ if(turnOnTwitchEnhancements){
 			// We already did what we need to do
 			return
 		}
-		if(globalsLoaded && subsLoaded && sdesLoaded && ffzsLoaded){
+		if(globalsLoaded && subsLoaded && sdesLoaded && globalFfzsLoaded && localFfzsLoaded){
 			// Let's go!
 			everythingLoaded = true
 
+			// Handle already rendered messages
 			var lineEls = document.querySelectorAll(".line[ltype='privmsg']")
 			for(var i = 0; i < lineEls.length; i++){
 				replaceEmotesInLine(lineEls[i])
@@ -576,5 +603,6 @@ if(turnOnTwitchEnhancements){
 	getGlobalEmotes()
 	getSubEmotes()
 	getSdeEmotes()
-	getFfzEmotes()
+	getGlobalFfzEmotes()
+	getLocalFfzEmotes()
 }
