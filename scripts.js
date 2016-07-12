@@ -104,6 +104,10 @@ var emoteUrl = function(id){
 var smilies = {
 	":Z": { url: emoteUrl("b9cbb6884788aa62") },
 	":z": { url: emoteUrl("b9cbb6884788aa62") },
+	":-Z": { url: emoteUrl("b9cbb6884788aa62") },
+	":-z": { url: emoteUrl("b9cbb6884788aa62") },
+	":|": { url: emoteUrl("b9cbb6884788aa62") },
+	":-|": { url: emoteUrl("b9cbb6884788aa62") },
 
 	":)": { url: emoteUrl("ebf60cd72f7aa600") },
 	":-)": { url: emoteUrl("ebf60cd72f7aa600") },
@@ -124,8 +128,9 @@ var smilies = {
 	"<3": { url: emoteUrl("577ade91d46d7edc") },
 
 	":/": { url: emoteUrl("374120835234cb29") },
-	":|": { url: emoteUrl("374120835234cb29") },
+	":-/": { url: emoteUrl("374120835234cb29") },
 	":\\": { url: emoteUrl("374120835234cb29") },
+	":-\\": { url: emoteUrl("374120835234cb29") },
 
 	";)": { url: emoteUrl("cfaf6eac72fe4de6") },
 	";-)": { url: emoteUrl("cfaf6eac72fe4de6") },
