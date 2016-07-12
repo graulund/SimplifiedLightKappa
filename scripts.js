@@ -166,7 +166,8 @@ var twitchEmotes = []
 
 // Status
 var everythingLoaded = false, globalsLoaded = false, subsLoaded = false,
-	sdesLoaded = false, globalFfzsLoaded = false, localFfzsLoaded = false
+	sdesLoaded = false, globalFfzsLoaded = false, localFfzsLoaded = false,
+	globalBttvsLoaded = false
 
 if(turnOnTwitchEnhancements){
 
@@ -223,6 +224,8 @@ if(turnOnTwitchEnhancements){
 		// Expects the following JSON format in response:
 		// { meta : {}, template: { small, medium, large }, emotes: {...}}
 
+		// Emote object: { image_id: ... }
+
 		return getEmoteSet(
 			"https://twitchemotes.com/api_cache/v2/global.json",
 			function(data){
@@ -247,6 +250,8 @@ if(turnOnTwitchEnhancements){
 	var getSubEmotes = function() {
 		// Expects the following JSON format in response:
 		// { meta : {}, template: { small, medium, large }, channels: { ...: { emotes: [...] }}}
+
+		// Emote object: { description: ..., image_id: ... }
 
 		return getEmoteSet(
 			"https://twitchemotes.com/api_cache/v2/subscriber.json",
@@ -310,6 +315,8 @@ if(turnOnTwitchEnhancements){
 	var getFfzEmotes = function(url, channelName, callback) {
 		// Expects the following JSON format in response:
 		// { sets: { x: { emoticons: [...] }, ... }}
+
+		// Emote object: { name: ..., urls: { 1: ..., 2: ..., 4: ... } }
 
 		if(!(typeof callback === "function")){
 			return
@@ -409,6 +416,48 @@ if(turnOnTwitchEnhancements){
 			"https://api.frankerfacez.com/v1/room/" + channelName,
 			channelName,
 			done
+		)
+	}
+
+	var getGlobalBttvEmotes = function() {
+		// Expects the following JSON format in response:
+		// { status: ..., emotes: [...] }
+
+		// Emote object: { url: ..., regex: ... }
+		// URL is always single and ends in 1x, but 2x and 3x versions exist
+
+		return getEmoteSet(
+			"https://api.betterttv.net/emotes",
+			function(data){
+				if("emotes" in data){
+					var emotes = data.emotes
+					if("length" in emotes){
+						for (var i = 0; i < emotes.length; i++) {
+							var emote = emotes[i], code = emote.regex
+							if (filteredEmotes.indexOf(code) === -1) {
+								var emoteData = {
+									url: emote.url
+								}
+
+								// Assemble srcset
+								if(/1x$/.test(emote.url)){
+									emoteData.srcset = [
+										fixUrlScheme(emote.url) + " 1x",
+										fixUrlScheme(emote.url.replace(/1x$/, "2x")) + " 2x",
+										fixUrlScheme(emote.url.replace(/1x$/, "3x")) + " 4x"
+									].join(", ")
+								}
+
+								twitchEmotes[code] = emoteData
+							}
+						}
+					}
+				}
+			},
+			function(){
+				globalBttvsLoaded = true
+				getStarted()
+			}
 		)
 	}
 
@@ -579,7 +628,11 @@ if(turnOnTwitchEnhancements){
 			// We already did what we need to do
 			return
 		}
-		if(globalsLoaded && subsLoaded && sdesLoaded && globalFfzsLoaded && localFfzsLoaded){
+		if(
+			globalsLoaded && subsLoaded && sdesLoaded &&
+			globalFfzsLoaded && localFfzsLoaded &&
+			globalBttvsLoaded
+		){
 			// Let's go!
 			everythingLoaded = true
 
@@ -610,4 +663,5 @@ if(turnOnTwitchEnhancements){
 	getSdeEmotes()
 	getGlobalFfzEmotes()
 	getLocalFfzEmotes()
+	getGlobalBttvEmotes()
 }
