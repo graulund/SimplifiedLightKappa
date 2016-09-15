@@ -13,7 +13,7 @@ body {
  	z-index: 100;
 	font-size: 12px;
 	overflow: hidden;
-	overflow-y: visible;
+	overflow-y: auto;
 	background-color: #fff;
 	font-family: "Lucida Grande";
 }
@@ -41,6 +41,33 @@ body .line {
 
 body[dir=rtl] .sender {
 	display: inline-block;
+}
+
+/* Scrolling */
+
+body[customscroller="true"]::-webkit-scrollbar {
+	width: 17px;
+}
+
+body[customscroller="true"]::-webkit-scrollbar:horizontal {
+	height: 0;
+}
+
+body[customscroller="true"]::-webkit-scrollbar-track {
+	background: #fbfbfb;
+	box-shadow: inset 1px 0px 0px 0px #e8e8e8;
+}
+
+body[customscroller="true"]::-webkit-scrollbar-thumb {
+	background-color: #c1c1c1;
+	border: 4px solid transparent;
+	border-left: 5px solid transparent;
+	border-radius: 20px;
+	background-clip: content-box;
+}
+
+body[customscroller="true"]::-webkit-scrollbar-thumb:hover {
+	background-color: #7d7d7d;
 }
 
 /* Loading Screen */
@@ -193,8 +220,17 @@ div[id=mark] {
 
 /* Historic Line */
 
-.historic {
+#historic_messages {
+	transition: opacity 0.8s ease-in;
+	opacity: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#historic_messages.loaded {
 	opacity: 0.6;
+	height: auto;
 }
 
 /* NOTICE/CTCP/WALLOPS */
@@ -328,8 +364,8 @@ body[dir=rtl] div[ltype*=action] .sender:after {
 
 body div.line[ltype*=invite],
 body div.line[ltype*=debug],
-body div.line[ltype*=rawhtml],
-body div.line[ltype*=dccfiletransfer] {
+body div.line[ltype*=dcc-file-transfer],
+body div.line[ltype*=off-the-record-encryption-status] {
 	color: #777;
   	z-index: 190;
 	background: #eee;
@@ -337,6 +373,12 @@ body div.line[ltype*=dccfiletransfer] {
  	padding: 2px 5px 2px 5px;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
+}
+
+/* off-the-record-encryption-status Message Event */
+body div.line[ltype*=off-the-record-encryption-status]  .message {
+	color: #ff0000;
+	font-weight: 700;
 }
 
 /* Message of the Day (MOTD) */
